@@ -9,6 +9,7 @@
   </PropertyGroup>
   <ItemGroup>
     <Compile Include="TestProgram.cs" />
+    <Compile Include="../GlobalUsings.cs" Link="GlobalUsings.cs" />
     <Compile Include="../Services/**/*.cs" LinkBase="Services" />
     <Compile Include="../Models/**/*.cs" LinkBase="Models" />
   </ItemGroup>
