@@ -20,7 +20,7 @@ jobs:
       - name: Validate PowerShell helpers
         shell: pwsh
         run: |
-          foreach ($script in @('Tools/Create-Bridge-Pak.ps1', 'Tools/Apply-Update.ps1')) {
+          foreach ($script in @('Tools/Create-Bridge-Pak.ps1', 'Tools/Apply-Update.ps1', 'Tools/Setup-LocalBridge.ps1')) {
             $tokens = $null
             $errors = $null
             [System.Management.Automation.Language.Parser]::ParseFile((Resolve-Path $script), [ref]$tokens, [ref]$errors) | Out-Null
@@ -44,6 +44,7 @@ jobs:
       - name: Include bridge and update tools
         shell: pwsh
         run: |
+          Copy-Item -LiteralPath BridgeLocal -Destination publish/BridgeLocal -Recurse
           Copy-Item -LiteralPath BridgeMod -Destination publish/BridgeMod -Recurse
           Copy-Item -LiteralPath Tools -Destination publish/Tools -Recurse
           Copy-Item -LiteralPath README.md -Destination publish/README.md
