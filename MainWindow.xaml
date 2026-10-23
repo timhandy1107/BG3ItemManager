@@ -1,0 +1,69 @@
+<Window x:Class="BG3ItemManager.MainWindow" xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation" xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml" Title="BG3 Item Manager" Height="740" Width="1160" MinHeight="500" MinWidth="750" Background="#161A23" Foreground="#EEE8DC" FontFamily="Segoe UI">
+  <Window.Resources>
+    <Style TargetType="Button"><Setter Property="Background" Value="#343C4B"/><Setter Property="Foreground" Value="White"/><Setter Property="Padding" Value="12,7"/><Setter Property="Margin" Value="0,0,8,0"/><Setter Property="BorderThickness" Value="0"/></Style>
+    <Style TargetType="TextBox"><Setter Property="Background" Value="#252C39"/><Setter Property="Foreground" Value="White"/><Setter Property="CaretBrush" Value="White"/><Setter Property="BorderBrush" Value="#626C7C"/><Setter Property="Padding" Value="9"/></Style>
+    <Style TargetType="ComboBox"><Setter Property="Padding" Value="6"/><Setter Property="Margin" Value="0,0,8,0"/></Style>
+  </Window.Resources>
+  <DockPanel Margin="20">
+    <StackPanel DockPanel.Dock="Top">
+      <TextBlock Text="BG3 ITEM MANAGER" Foreground="#E8D9BA" FontWeight="Bold" FontSize="25"/>
+      <TextBlock x:Name="StatusText" Text="Katalog wird geladen" Foreground="#B8BFCA" Margin="0,4,0,4"/>
+      <TextBlock x:Name="BridgeStatusText" Text="Script Extender: nicht verbunden" Foreground="#E1B77B" Margin="0,0,0,14"/>
+      <Grid Margin="0,0,0,12"><Grid.ColumnDefinitions><ColumnDefinition Width="*"/><ColumnDefinition Width="190"/><ColumnDefinition Width="190"/></Grid.ColumnDefinitions>
+        <TextBox x:Name="SearchBox" Grid.Column="0" Margin="0,0,10,0" TextChanged="FiltersChanged" ToolTip="Suche nach deutschem/englischem Namen, technischem Namen, Stats-Name oder UUID"/>
+        <ComboBox x:Name="CategoryBox" Grid.Column="1" SelectionChanged="FiltersChanged"/>
+        <ComboBox x:Name="SourceBox" Grid.Column="2" SelectionChanged="FiltersChanged"/>
+      </Grid>
+      <WrapPanel Margin="0,0,0,12">
+        <Button Content="Brücke prüfen" Click="PingBridgeClicked"/>
+        <Button Content="Charaktere laden" Click="RefreshCharactersClicked"/>
+        <Button Content="Brückenordner" Click="OpenBridgeFolderClicked"/>
+        <Button Content="Katalog neu laden" Click="ReloadClicked"/>
+        <Button x:Name="PakImportButton" Content="Spiel + Mods einlesen" Click="ImportPakClicked"/>
+        <Button Content="BG3-Ordner wählen" Click="SelectGameClicked"/>
+        <Button Content="Divine.exe auswählen" Click="SelectDivineClicked"/>
+        <Button Content="texconv.exe auswählen" Click="SelectTexconvClicked"/>
+        <Button Content="LSX importieren" Click="ImportExtractedClicked"/>
+        <Button Content="Extrahierte Mods" Click="OpenExtractedClicked"/>
+        <Button Content="Mod-Ordner öffnen" Click="OpenModsClicked"/>
+        <Button Content="Datenordner öffnen" Click="OpenDataClicked"/>
+        <TextBlock x:Name="CountText" VerticalAlignment="Center" Foreground="#B8BFCA" Margin="12,0,0,0"/>
+      </WrapPanel>
+    </StackPanel>
+    <Grid><Grid.ColumnDefinitions><ColumnDefinition Width="2*"/><ColumnDefinition Width="8"/><ColumnDefinition Width="*"/></Grid.ColumnDefinitions>
+      <DataGrid x:Name="ItemsGrid" Grid.Column="0" AutoGenerateColumns="False" IsReadOnly="True" SelectionMode="Single" SelectionChanged="ItemSelected" PreviewMouseRightButtonDown="ItemRightClick" Background="#252C39" Foreground="#EEE8DC" RowBackground="#252C39" AlternatingRowBackground="#303847" BorderThickness="0" HeadersVisibility="Column" GridLinesVisibility="None" CanUserAddRows="False">
+        <DataGrid.Columns>
+          <DataGridTemplateColumn Header="Bild" Width="56">
+            <DataGridTemplateColumn.CellTemplate>
+              <DataTemplate>
+                <Image Source="{Binding IconAbsolutePath}" Width="36" Height="36" Margin="3" Stretch="Uniform"/>
+              </DataTemplate>
+            </DataGridTemplateColumn.CellTemplate>
+          </DataGridTemplateColumn>
+          <DataGridTextColumn Header="Gegenstand" Binding="{Binding DisplayName}" Width="2*"/>
+          <DataGridTextColumn Header="Englischer Name" Binding="{Binding NameEn}" Width="2*"/>
+          <DataGridTextColumn Header="Kategorie" Binding="{Binding Category}" Width="*"/>
+          <DataGridTextColumn Header="Quelle" Binding="{Binding Source}" Width="*"/>
+        </DataGrid.Columns>
+        <DataGrid.ContextMenu><ContextMenu Opened="ItemMenuOpened"><MenuItem Header="UUID kopieren" Click="CopyUuidClicked"/><MenuItem Header="Gegenstand untersuchen" Click="InspectClicked"/><Separator/><MenuItem Header="An Charakter geben ..." Click="GiveClicked"/></ContextMenu></DataGrid.ContextMenu>
+      </DataGrid>
+      <GridSplitter Grid.Column="1" Width="8" HorizontalAlignment="Stretch" Background="#171B24"/>
+      <ScrollViewer Grid.Column="2" VerticalScrollBarVisibility="Auto" HorizontalScrollBarVisibility="Disabled" Background="#222835" Margin="4,0,0,0">
+        <StackPanel>
+          <Border Height="170" Background="#303847" Margin="14" CornerRadius="5"><Image x:Name="ItemIcon" Stretch="Uniform" Margin="12"/></Border>
+          <TextBlock x:Name="ItemIconHint" Foreground="#B8BFCA" FontSize="11" Margin="14,0,14,8" TextWrapping="Wrap"/>
+          <TextBlock x:Name="ItemName" Text="Gegenstand auswählen" FontSize="19" FontWeight="SemiBold" Margin="14,0,14,8" TextWrapping="Wrap"/>
+          <TextBlock x:Name="ItemEnglish" Margin="14,0,14,8" Foreground="#B8BFCA" TextWrapping="Wrap"/>
+          <TextBlock x:Name="ItemCategory" Margin="14,0,14,8"/>
+          <TextBlock x:Name="ItemSource" Margin="14,0,14,8"/>
+          <TextBlock Text="BESCHREIBUNG" Foreground="#E8D9BA" FontWeight="Bold" Margin="14,8,14,5"/>
+          <TextBlock x:Name="ItemDescription" Margin="14,0,14,8" TextWrapping="Wrap"/>
+          <TextBlock Text="GEGENSTANDSWERTE (ROHDATEN)" Foreground="#E8D9BA" FontWeight="Bold" Margin="14,8,14,5"/>
+          <TextBlock x:Name="ItemProperties" Margin="14,0,14,8" TextWrapping="Wrap" FontFamily="Consolas" FontSize="12"/>
+          <TextBlock x:Name="ItemTechnical" Margin="14,12,14,8" Foreground="#B8BFCA" TextWrapping="Wrap"/>
+          <TextBlock x:Name="ItemUuid" Margin="14,0,14,8" Foreground="#B8BFCA" TextWrapping="Wrap"/>
+        </StackPanel>
+      </ScrollViewer>
+    </Grid>
+  </DockPanel>
+</Window>

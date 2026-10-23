@@ -1,0 +1,31 @@
+BG3 ITEM MANAGER – HOST LOKALE SCRIPT-EXTENDER-BRÜCKE (v0.8)
+
+ACHTUNG: Noch nicht mit laufendem BG3 / Multiplayer getestet.
+Diese Dateien sind ein separater Lua-Mod-Baustein. Die Windows-App allein
+kann ohne so einen Brückenbaustein keine Spielbefehle ausführen.
+
+Für Entwickler und Test auf einer separaten Spielstandkopie:
+
+1. Die Struktur unter BridgeMod/Mods/BG3ItemManagerBridge nach
+   <BG3-Installationsordner>/Data/Mods/BG3ItemManagerBridge kopieren.
+   Ziel muss beinhalten:
+     Data/Mods/BG3ItemManagerBridge/meta.lsx
+     Data/Mods/BG3ItemManagerBridge/ScriptExtender/config.json
+     Data/Mods/BG3ItemManagerBridge/ScriptExtender/Lua/BootstrapServer.lua
+2. Die lose Mod muss von BG3/Script Extender tatsächlich geladen werden.
+   Dafür kann Mod-Manager-Aktivierung bzw. Packaging als PAK erforderlich sein.
+   Ein reines Ablegen der Dateien garantiert KEIN Laden der Mod.
+3. BG3 neu starten, Spielstand laden, in der EXE auf "Brücke prüfen" klicken.
+4. Wenn kein Heartbeat erscheint: Script Extender Logs/Konsole prüfen.
+
+HINWEIS ZUM KOOP:
+Die Lua-Brücke ist ausschließlich für den HOST vorgesehen. Sie ist derzeit
+NICHT als erwiesen clientfrei oder ohne Modkompatibilitätswarnungen getestet.
+Aktivierung/Packaging oder Abweichungen von Clients können die Verbindung
+bzw. den Multiplayer-Start beeinträchtigen. Vor dem Koop testen.
+
+Der Austausch erfolgt ohne Netzwerkport und nutzt nur JSON-Dateien im Pfad
+%LOCALAPPDATA%\Larian Studios\Baldur's Gate 3\Script Extender\BG3ItemManager\
+
+Es werden ausschließlich drei Befehle angenommen: ping, list_characters,
+give_item. Lua und die EXE führen keine freien Textbefehle aus.
