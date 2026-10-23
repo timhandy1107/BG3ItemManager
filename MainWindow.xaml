@@ -15,6 +15,7 @@
         <ComboBox x:Name="SourceBox" Grid.Column="2" SelectionChanged="FiltersChanged"/>
       </Grid>
       <WrapPanel Margin="0,0,0,12">
+        <CheckBox x:Name="NamedOnlyBox" Content="Nur benannte Gegenstände" IsChecked="True" Checked="FiltersChanged" Unchecked="FiltersChanged" Foreground="#E8D9BA" VerticalAlignment="Center" Margin="0,0,14,0" ToolTip="Technische und namenlose Vorlagen ausblenden, ohne Daten zu löschen."/>
         <Button Content="Brücke prüfen" Click="PingBridgeClicked"/>
         <Button Content="Charaktere laden" Click="RefreshCharactersClicked"/>
         <Button Content="Brückenordner" Click="OpenBridgeFolderClicked"/>
@@ -42,7 +43,7 @@
           </DataGridTemplateColumn>
           <DataGridTextColumn Header="Gegenstand" Binding="{Binding DisplayName}" Width="2*"/>
           <DataGridTextColumn Header="Englischer Name" Binding="{Binding NameEn}" Width="2*"/>
-          <DataGridTextColumn Header="Kategorie" Binding="{Binding Category}" Width="*"/>
+          <DataGridTextColumn Header="Kategorie" Binding="{Binding DisplayCategory}" Width="*"/>
           <DataGridTextColumn Header="Quelle" Binding="{Binding Source}" Width="*"/>
         </DataGrid.Columns>
         <DataGrid.ContextMenu><ContextMenu Opened="ItemMenuOpened"><MenuItem Header="UUID kopieren" Click="CopyUuidClicked"/><MenuItem Header="Gegenstand untersuchen" Click="InspectClicked"/><Separator/><MenuItem Header="An Charakter geben ..." Click="GiveClicked"/></ContextMenu></DataGrid.ContextMenu>
