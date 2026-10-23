@@ -238,3 +238,24 @@ static void RunSta(Action action)
     thread.Join();
     if (failure is not null) System.Runtime.ExceptionServices.ExceptionDispatchInfo.Capture(failure).Throw();
 }
+
+
+// Catalog presentation reads existing imported-items.json; no re-import or cache writes.
+var labeledItem = new BG3ItemManager.Models.ItemRecord
+{
+    Uuid = "b8fa6f32-0244-4f9f-8bc4-2a1d2b3c4d5e",
+    NameDe = "Testsäbel",
+    NameEn = "Test Sabre",
+    TechnicalName = "WPN_TEST_SWORD",
+    Category = "Weapon"
+};
+Assert(ItemViewService.HasReadableName(labeledItem), "Benanntes Item anzeigen");
+Assert(ItemViewService.DisplayCategory(labeledItem) == "Waffen", "Waffe klassifizieren");
+var technicalOnlyItem = new BG3ItemManager.Models.ItemRecord {
+    Uuid = Guid.NewGuid().ToString(), NameEn = "S_TEST_LEVER", TechnicalName = "S_TEST_LEVER",
+    Category = "Unklassifiziert"
+};
+Assert(!ItemViewService.HasReadableName(technicalOnlyItem), "Technische Vorlagen standardmaessig ausblenden");
+var amuletItem = new BG3ItemManager.Models.ItemRecord { NameEn = "Spellcrux Amulet", Category = "Object" };
+Assert(ItemViewService.DisplayCategory(amuletItem) == "Schmuck", "Amulett kategorisieren");
+Console.WriteLine("PASS: Item-Kategorien und Filter ohne Neuimport");
