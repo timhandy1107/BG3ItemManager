@@ -1,3 +1,26 @@
+BG3 ITEM MANAGER – BRUECKE TESTEN (v0.9)
+
+EMPFOHLENER WEG: PAK AUS DEINER VORHANDENEN Divine.exe BAUEN
+1. BG3 und Item Manager schliessen, Einzelspieler-Testspielstand sichern.
+2. Im BG3ItemManager-Ordner PowerShell starten:
+   powershell -NoProfile -File ".\Tools\Create-Bridge-Pak.ps1"
+3. Divine.exe wird wenn moeglich aus Data/tool-settings.json erkannt;
+   andernfalls nach dem vollstaendigen Pfad gefragt.
+4. Ausgabe: BridgeBuild\BG3ItemManagerBridge.pak
+5. Diese PAK fuer den Test nach
+   %LOCALAPPDATA%\Larian Studios\Baldur's Gate 3\Mods
+   kopieren, im BG3 Mod Manager aktivieren und Load Order speichern.
+6. Nur mit einem separaten Solo-Save BG3 starten.
+7. Im externen Programm: Bruecke pruefen -> Charaktere laden.
+8. Erst dann Gegenstandsvergabe versuchen; Spa wn-Erfolg immer
+   im Inventar verifizieren.
+
+WICHTIG: Die Mod ist nicht als host-only multiplayer-kompatibel
+verifiziert. NICHT im aktiven Koop-Profil testen.
+Der bestehende Data-Katalog des Item Managers bleibt unberuehrt.
+
+=== ENTWICKLERWEG (LOSE DATEIEN) ===
+
 BG3 ITEM MANAGER – HOST LOKALE SCRIPT-EXTENDER-BRÜCKE (v0.8)
 
 ACHTUNG: Noch nicht mit laufendem BG3 / Multiplayer getestet.
