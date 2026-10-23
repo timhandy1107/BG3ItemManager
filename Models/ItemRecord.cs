@@ -33,6 +33,7 @@ public sealed class ItemRecord
         }
     }
 
+    public string DisplayCategory => BG3ItemManager.Services.ItemViewService.DisplayCategory(this);
     public string DisplayName => !string.IsNullOrWhiteSpace(NameDe) ? NameDe
         : !string.IsNullOrWhiteSpace(NameEn) ? NameEn
         : !string.IsNullOrWhiteSpace(TechnicalName) ? TechnicalName : Uuid;
