@@ -67,7 +67,7 @@ public partial class MainWindow : Window
             MessageBox.Show($"Gelesene Dateien: {result.Files}\nVorlagen: {result.Items}\nLokalisierungsdateien: {result.LocalizationFiles}\nAufgelöste Namen: {result.LocalizedNames}\nVerknüpfte Einzelbilder: {result.Icons}\nFehler: {result.Errors}\n\n" + string.Join("\n", result.Warnings), "LSX-Import");
         }
         catch (Exception ex) { MessageBox.Show(ex.Message, "Importfehler", MessageBoxButton.OK, MessageBoxImage.Error); }
-        finally { if (sender is Button button) button.IsEnabled = true; }
+        finally { if (sender is Button resetButton) resetButton.IsEnabled = true; }
     }
     private void SelectGameClicked(object sender, RoutedEventArgs e)
     {
