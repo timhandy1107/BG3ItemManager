@@ -33,7 +33,7 @@ public partial class MainWindow : Window
             StatusText.Text = $"Katalog – BG3: {(game is null ? "Spielordner nicht erkannt" : game)} · {packages.Count} Mod-Pakete · {_items.Count} Gegenstände";
             var category = CategoryBox.SelectedItem as string ?? "Alle Kategorien";
             var source = SourceBox.SelectedItem as string ?? "Alle Quellen";
-            SetOptions(CategoryBox, new[] { "Alle Kategorien" }.Concat(_items.Select(i => i.Category).Distinct().OrderBy(x => x)), category);
+            SetOptions(CategoryBox, new[] { "Alle Kategorien" }.Concat(_items.Select(i => i.DisplayCategory).Distinct().OrderBy(x => x)), category);
             SetOptions(SourceBox, new[] { "Alle Quellen" }.Concat(_items.Select(i => i.Source).Distinct().OrderBy(x => x)), source);
             ApplyFilters();
         }
@@ -50,7 +50,9 @@ public partial class MainWindow : Window
         string q = SearchBox.Text.Trim();
         string cat = CategoryBox.SelectedItem as string ?? "Alle Kategorien";
         string src = SourceBox.SelectedItem as string ?? "Alle Quellen";
-        var filtered = _items.Where(i => (cat == "Alle Kategorien" || i.Category == cat)
+        bool onlyNamed = NamedOnlyBox?.IsChecked == true;
+        var filtered = _items.Where(i => (!onlyNamed || ItemViewService.HasReadableName(i))
+            && (cat == "Alle Kategorien" || i.DisplayCategory == cat)
             && (src == "Alle Quellen" || i.Source == src)
             && (q.Length == 0 || new[] { i.NameDe, i.NameEn, i.TechnicalName, i.StatsName, i.Uuid, i.Description, i.DescriptionDe, i.DescriptionEn }.Any(s => s.Contains(q, StringComparison.OrdinalIgnoreCase)))).ToList();
         ItemsGrid.ItemsSource = filtered;
@@ -124,7 +126,7 @@ public partial class MainWindow : Window
         ItemName.Text = i?.DisplayName ?? "Gegenstand auswählen";
         ItemEnglish.Text = i is null || string.IsNullOrWhiteSpace(i.NameEn) ? "" : $"Englisch: {i.NameEn}";
         ItemTechnical.Text = i is null ? "" : $"Technisch: {i.TechnicalName}   Stats: {i.StatsName}   Icon-ID: {i.IconId}";
-        ItemCategory.Text = i is null ? "" : $"Kategorie: {i.Category}";
+        ItemCategory.Text = i is null ? "" : $"Kategorie: {i.DisplayCategory}";
         ItemSource.Text = i is null ? "" : $"Quelle: {i.Source}";
         ItemUuid.Text = i is null ? "" : $"UUID: {i.Uuid}";
         ItemDescription.Text = i?.DisplayDescription ?? "";
