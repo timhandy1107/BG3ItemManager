@@ -1,3 +1,40 @@
+# BG3 Item Manager – Entwicklungsstand v0.9
+
+## Was ist neu?
+
+- **Kein Neuimport nötig:** Der bestehende Ordner `Data` mit `imported-items.json`, `ModCache`, `IconCache` und deinen gespeicherten Werkzeugpfaden bleibt erhalten.
+- Der Schalter **Nur benannte Gegenstände** blendet technische und namenlose Vorlagen in der Liste standardmäßig aus. Die Daten bleiben vollständig gespeichert; durch Abwählen des Schalters werden sie wieder angezeigt.
+- **Anzeigekategorien** (Waffen, Rüstungen, Schmuck, Schriftrollen etc.) werden aus vorhandenen Namen und Stats-Hinweisen abgeleitet. Es sind Heuristiken, keine vollständige Überprüfung auf Spawnfähigkeit.
+- `Tools/Create-Bridge-Pak.ps1` erstellt aus den mitgelieferten Lua-Dateien mittels deiner vorhandenen Divine.exe eine `BG3ItemManagerBridge.pak`. Es verändert standardmäßig weder Spiel noch Mod-Konfiguration.
+- `Tools/Apply-Update.ps1` ersetzt beim Einspielen eines heruntergeladenen Update-ZIPs **nur die EXE** und legt ein EXE-Backup an. Der `Data`-Ordner wird nicht angefasst. Dies ist ein manueller Updatehelfer, **noch kein automatischer Update-Download**.
+- GitHub Actions baut die EXE, lässt den Import-Regressionstest laufen und liefert `BridgeMod` sowie `Tools` im selben Download mit.
+
+## Version 0.9 ausprobieren, ohne Datenverlust
+
+1. Vor dem ersten Update den Ordner `Data` einmal sichern.
+2. Die aktuelle Windows-ZIP unter GitHub → **Actions → Build portable Windows EXE → letzter erfolgreicher Lauf → Artifacts** herunterladen und **nicht** über deinen vorhandenen `Data`-Ordner entpacken.
+3. Den bestehenden BG3 Item Manager schließen. Entweder nur die neue `BG3ItemManager.exe` in seinen Ordner kopieren oder `Tools/Apply-Update.ps1` (im *bestehenden* Programmordner) mit `-UpdateZip "PFAD_ZUM_ARTIFACT.zip"` ausführen. Die Tools-Skripte und `BridgeMod` aus der heruntergeladenen ZIP dürfen ebenfalls aktualisiert werden.
+4. Den Manager öffnen: Die bisherigen 70.511 importierten Einträge werden aus dem vorhandenen `Data`-Ordner geladen. **Nicht** erneut auf „Spiel + Mods einlesen“ klicken.
+
+## Script-Extender-Brücke im Einzelspieler testen
+
+Die getrennte Lua-Brücke ist ein **Mod** und muss von BG3 geladen/aktiviert werden. Sie ist **nicht** bewiesenermaßen kompatibel mit einem Koop-Spielstand, dessen Clients diese Mod nicht installiert haben.
+
+1. Die **Version 0.9-ZIP** enthält `BridgeMod` und `Tools/Create-Bridge-Pak.ps1`. Auch mit der bisherigen EXE kannst du die Brücke gesondert bauen.
+2. Im PowerShell-Fenster im Programmordner: `powershell -NoProfile -File ".\Tools\Create-Bridge-Pak.ps1"`. Das Skript liest den Divine-Pfad nach Möglichkeit aus `Data/tool-settings.json`. Alternativ fragt es nach `Divine.exe`.
+3. Die Ausgabe liegt unter `BridgeBuild/BG3ItemManagerBridge.pak`. Diese Datei für einen **separaten Solo-Test** nach `%LOCALAPPDATA%\Larian Studios\Baldur's Gate 3\Mods` kopieren, im verwendeten BG3-Mod-Manager aktivieren und die Ladereihenfolge exportieren/speichern.
+4. BG3 neu starten, separaten Testspielstand laden, im Item Manager „Brücke prüfen“ und „Charaktere laden“ verwenden. Erst danach mit einem bekannten gültigen Root-Template testen.
+5. Wenn die Brücke keine Antwort liefert: Mod-Aktivierung und den Script-Extender-Log prüfen. Die Existenz der `.pak`-Datei allein garantiert nicht, dass das Lua-Skript gestartet wurde.
+
+### Bekannte Grenzen
+
+- Ein erfolgreicher Windows-Build bedeutet **noch keinen erfolgreichen Ingame-Test**. Die Lua-Brücke und Gegenstandsvergabe sind weiterhin im laufenden BG3 zu prüfen.
+- Die Filterung, Kategorisierung und der Import der Originalbilder sind teilweise heuristisch; 70.511 importierte Einträge bedeuten nicht 70.511 nutzbare/erzeugbare Gegenstände.
+- Im bestehenden Datenimport können Icons, deutsche Namen und Werte weiterhin fehlen.
+- **Nicht** im aktiven Koop-Profil ausprobieren, solange die Multiplayer-Kompatibilität nicht geprüft ist.
+
+---
+
 # BG3 Item Manager – Entwicklungsstand v0.8
 
 **Ziel:** Portable, eigenständige Windows-Anwendung für Baldur's Gate 3 mit Suche nach deutschen/englischen Namen und UUIDs, Kategorien, Original-Icons sowie importierten Daten aus Basisspiel und Mods. Die Anwendung liest die vorhandenen Spieldateien, verändert sie aber nicht.
