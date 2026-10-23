@@ -1,3 +1,27 @@
+# WICHTIG: Bridge OHNE BG3-Mod und OHNE Mod-Manager (lokale Konsole)
+
+Die vorherige PAK-Brücke war nicht die gewünschte Lösung. **Nicht** `Tools/Create-Bridge-Pak.ps1` und **nicht** `BG3ItemManagerBridge.pak` verwenden. Für die modfreie lokale Variante sind stattdessen `BridgeLocal/LocalBridge.lua` und `Tools/Setup-LocalBridge.ps1` vorgesehen.
+
+Die vorhandene **v0.9-EXE** muss nicht geändert werden. `Data`, die bereits importierten Gegenstände, der Importcache und alle Einstellungen bleiben erhalten.
+
+## Einmalige Einrichtung auf dem Host-PC
+1. Aus dem GitHub-Repository die Ordner `BridgeLocal` und `Tools` neben die bestehende `BG3ItemManager.exe` kopieren.
+2. BG3 und Item Manager schließen. Einmalig PowerShell **im EXE-Ordner** öffnen und ausführen:
+   `powershell -NoProfile -File ".\Tools\Setup-LocalBridge.ps1"`
+3. Das Skript kopiert `LocalBridge.lua` in den lokalen Extender-Datenordner `%LOCALAPPDATA%\Larian Studios\Baldur's Gate 3\Script Extender\BG3ItemManager\`, stellt `CreateConsole: true` in `<BG3>\bin\ScriptExtenderSettings.json` ein und sichert eine vorhandene Konfiguration vorher in `.bg3itemmanager.bak`. Es installiert **keine** `.pak` und ändert weder `modsettings.lsx` noch den BG3-Modordner.
+4. BG3 neu starten und einen gesicherten **Solo-Testspielstand** laden. In der Script-Extender-Konsole Enter drücken, ggf. `server` eingeben (mit Enter bestätigen), dann den folgenden **einen** Lua-Befehl eingeben:
+   `assert(Ext.Utils.LoadString(assert(Ext.IO.LoadFile("BG3ItemManager/LocalBridge.lua"))))()`
+5. In der Windows-Anwendung **Brücke prüfen** und danach **Charaktere laden** klicken. Zuerst ausschließlich einen kleinen bekannten Gegenstand mit gültiger Root-Template-UUID in einem separaten Solo-Testspielstand ausprobieren.
+
+### Einschränkungen
+- **Jeder BG3-Neustart** erfordert aktuell, den Konsolenbefehl erneut einzugeben. Automatisches Laden ohne jeden Eingriff ist noch nicht implementiert.
+- Das ist **keine registrierte BG3-Mod** und taucht daher nicht aufgrund dieser Bridge als neue `.pak` in der Mod-Liste auf. Der Script Extender bleibt eine lokale Laufzeiterweiterung. Script-Injektion, Konsolenaktivität und erzeugte Inventargegenstände sind deswegen **nicht unsichtbar oder folgenlos**. Keine Zusage, dass Koop-Mitspieler nichts bemerken oder die Änderung nicht synchronisiert wird.
+- `Ext.IO.LoadFile`, `Ext.Utils.LoadString` und die SE-Konsole sind in der API dokumentiert; die Kombination mit dieser Bridge muss mit einer **echten BG3-Sitzung** erst bestätigt werden.
+- Das Setup ändert eine Datei im BG3-`bin`-Ordner (`ScriptExtenderSettings.json`), aber keine Spiel-PAK und keinen Mod-Loadorder-Eintrag. Ein Backup existiert, falls die ursprünglichen Einstellungen wiederhergestellt werden sollen.
+- Bei einem Lua-Fehler wird die Bridge nicht gestartet. Fehlermeldung aus SE-Konsole bzw. den Logs zur Diagnose verwenden.
+
+---
+
 # BG3 Item Manager – Entwicklungsstand v0.9
 
 ## Was ist neu?
